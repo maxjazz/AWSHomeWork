@@ -25,7 +25,7 @@
             "DependsOn": "TestVPC",
             "Properties": {
                 "VpcId": {"Ref": "TestVPC"},
-                "AvailabilityZone": {"Fn::Select":["0",{"Fn::GetAZs": {"Ref":"AWS::Region"}}]},
+                "AvailabilityZone": {"Fn::Select":["1",{"Fn::GetAZs": {"Ref":"AWS::Region"}}]},
                 "CidrBlock": "10.12.4.0/24",
                 "MapPublicIpOnLaunch": "True"
             }
@@ -87,21 +87,6 @@
             "Properties": {}            
         },
 
-        "NatGW1" : {
-            "Type" : "AWS::EC2::NatGateway",
-            "Properties" : {
-                  "SubnetId" : { "Ref" : "PrivSubnet1" }
-            }
-        },
-
-        "NatGW2" : {
-            "Type" : "AWS::EC2::NatGateway",
-            "Properties" : {
-                  "SubnetId" : { "Ref" : "PrivSubnet2" }
-            }
-        },
-
-
 
         "IGWAttachment": {
             "Type": "AWS::EC2::VPCGatewayAttachment",
@@ -110,6 +95,53 @@
                 "VpcId": {"Ref": "TestVPC"}
             }            
         },
+
+
+        "NATGateway1": {
+            "DependsOn": "IGWAttachment",
+            "Type": "AWS::EC2::NatGateway",
+            "Properties": {
+              "AllocationId": {
+                "Fn::GetAtt": [
+                  "ElasticIP1",
+                  "AllocationId"
+                ]
+              },
+              "SubnetId": {
+                "Ref": "PubSubnet1"
+              }
+            }
+          },
+          "ElasticIP1": {
+            "Type": "AWS::EC2::EIP",
+            "Properties": {
+              "Domain": "vpc"
+            }
+          },
+          "NATGateway2": {
+            "DependsOn": "IGWAttachment",
+            "Type": "AWS::EC2::NatGateway",
+            "Properties": {
+              "AllocationId": {
+                "Fn::GetAtt": [
+                  "ElasticIP2",
+                  "AllocationId"
+                ]
+              },
+              "SubnetId": {
+                "Ref": "PubSubnet2"
+              }
+            }
+          },
+          "ElasticIP2": {
+            "Type": "AWS::EC2::EIP",
+            "Properties": {
+              "Domain": "vpc"
+            }
+          },
+
+
+
 
         "DHCPOptions1": {
             "Type": "AWS::EC2::DHCPOptions",
@@ -161,7 +193,7 @@
         "AclAssoc1": {
             "Type" : "AWS::EC2::SubnetNetworkAclAssociation",
             "Properties" : {
-               "SubnetId" : ["Ref": "PubSubnet1"},
+               "SubnetId" : {"Ref": "PubSubnet1"},
                "NetworkAclId" : {"Ref": "NetAcl1"} 
             }
         },
@@ -169,7 +201,7 @@
         "AclAssoc2": {
             "Type" : "AWS::EC2::SubnetNetworkAclAssociation",
             "Properties" : {
-               "SubnetId" : ["Ref": "PubSubnet2"},
+               "SubnetId" : {"Ref": "PubSubnet2"},
                "NetworkAclId" : {"Ref": "NetAcl1"} 
             }
         },

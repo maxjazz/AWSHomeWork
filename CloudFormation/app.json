@@ -10,7 +10,7 @@
       "AmiId": {
         "Type": "String",
         "Description": "ID of AMI",
-        "Default": "ami-c58c1dd3"
+        "Default": "ami-4fffc834"
       },
 
       "SSHKey": {
@@ -21,7 +21,7 @@
 
       "S3BucketName": {
         "Type": "String",
-        "Default": "class-test-bucket"
+        "Default": "aws-homework-2017"
       }
 
     },
@@ -34,7 +34,7 @@
           "Tags" : [
             {"Key":"StackType", "Value":"VPC"}
           ],
-          "TemplateURL": {"Fn::Sub":"https://s3.amazonaws.com/${S3BucketName}/test-vpc.json"},
+          "TemplateURL": {"Fn::Sub":"https://s3.amazonaws.com/${S3BucketName}/vpc.json"},
           "TimeoutInMinutes" : "15"
         }
       },
@@ -45,7 +45,7 @@
           "Tags" : [
             {"Key":"StackType", "Value":"IAM"}
           ],
-          "TemplateURL": {"Fn::Sub":"https://s3.amazonaws.com/${S3BucketName}/test-iam.json"},
+          "TemplateURL": {"Fn::Sub":"https://s3.amazonaws.com/${S3BucketName}/iam.json"},
           "TimeoutInMinutes" : "15",
           "Parameters": {
             "S3Bucket": {"Ref":"S3BucketName"}
@@ -59,11 +59,12 @@
           "Tags" : [
             {"Key":"StackType", "Value":"EC2"}
           ],
-          "TemplateURL": {"Fn::Sub":"https://s3.amazonaws.com/${S3BucketName}/test-ec2.json"},
+          "TemplateURL": {"Fn::Sub":"https://s3.amazonaws.com/${S3BucketName}/ec2.json"},
           "TimeoutInMinutes" : "15",
           "Parameters": {
             "VpcId": {"Fn::GetAtt":["VPC","Outputs.VpcId"]},
-            "SubnetId": {"Fn::GetAtt":["VPC","Outputs.PrivSubnet1Id"]},
+            "PrivSubnet1Id": {"Fn::GetAtt":["VPC","Outputs.PrivSubnet1Id"]},
+            "PrivSubnet2Id": {"Fn::GetAtt":["VPC","Outputs.PrivSubnet2Id"]},
             "SecurityGroup": {"Fn::GetAtt":["VPC","Outputs.SecurityGroupId"]},
             "InstanceType": {"Ref": "InstanceType"},
             "AmiId": {"Ref": "AmiId"},

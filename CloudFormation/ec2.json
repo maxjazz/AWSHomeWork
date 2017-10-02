@@ -6,9 +6,14 @@
         "Description": "ID of VPC"
       },
 
-      "SubnetId": {
+      "PrivSubnet1Id": {
         "Type": "String",
         "Description": "ID of Subnet"
+      },
+      
+      "PrivSubnet2Id" : {
+        "Type" : "String",
+        "Description" : "ID of Subnet"
       },
 
       "InstanceType": {
@@ -92,8 +97,7 @@
               }
             ],
             "VPCZoneIdentifier" : [
-              {"Ref" : "PubSubnet1Id"},
-              {"Ref" : "PubSubnet2Id"}]
+              {"Ref" : "PrivSubnet1Id"}]
          }
       }, 
 
@@ -130,8 +134,8 @@
             "Scheme" : "",
             "SecurityGroups" : [{"Ref":"ELBSecurityGroup"}],
             "Subnets" : [
-              { "Ref":"PubSubnet1Id" },
-              { "Ref":"PubSubnet2Id" }
+              { "Ref":"PrivSubnet1Id" },
+              { "Ref":"PrivSubnet2Id" }
             ]
          }
       }   
