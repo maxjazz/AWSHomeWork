@@ -15,8 +15,7 @@
             "Properties": {
                 "VpcId": {"Ref": "TestVPC"},
                 "AvailabilityZone": {"Fn::Select":["0",{"Fn::GetAZs": {"Ref":"AWS::Region"}}]},
-                "CidrBlock": "10.12.2.0/24",
-                "MapPublicIpOnLaunch": "True"
+                "CidrBlock": "10.12.0.0/24"
             }
         },
 
@@ -26,8 +25,7 @@
             "Properties": {
                 "VpcId": {"Ref": "TestVPC"},
                 "AvailabilityZone": {"Fn::Select":["1",{"Fn::GetAZs": {"Ref":"AWS::Region"}}]},
-                "CidrBlock": "10.12.4.0/24",
-                "MapPublicIpOnLaunch": "True"
+                "CidrBlock": "10.12.2.0/24"
             }
         },
 
@@ -37,7 +35,7 @@
             "Properties": {
                 "VpcId": {"Ref": "TestVPC"},
                 "AvailabilityZone": {"Fn::Select":["0",{"Fn::GetAZs": {"Ref":"AWS::Region"}}]},
-                "CidrBlock": "10.12.6.0/24",
+                "CidrBlock": "10.12.10.0/24",
                 "MapPublicIpOnLaunch": "True"
             }
         },
@@ -47,14 +45,14 @@
             "DependsOn": "TestVPC",
             "Properties": {
                 "VpcId": {"Ref": "TestVPC"},
-                "AvailabilityZone": {"Fn::Select":["0",{"Fn::GetAZs": {"Ref":"AWS::Region"}}]},
-                "CidrBlock": "10.12.8.0/24",
+                "AvailabilityZone": {"Fn::Select":["1",{"Fn::GetAZs": {"Ref":"AWS::Region"}}]},
+                "CidrBlock": "10.12.12.0/24",
                 "MapPublicIpOnLaunch": "True"
             }
         },
 
         
-        "RouteTable1": {
+        "PubRoute": {
             "Type": "AWS::EC2::RouteTable",
             "Properties": {
                 "VpcId": {"Ref": "TestVPC"}
@@ -62,23 +60,28 @@
         },
         
 
-
-
-
         "VPCDefaultRoute": {
             "Type": "AWS::EC2::Route",
             "Properties": {
-                "RouteTableId": {"Ref": "RouteTable1"},
+                "RouteTableId": {"Ref": "PubRoute"},
                 "GatewayId": {"Ref": "IGW1"},
                 "DestinationCidrBlock": "0.0.0.0/0"
             }
         },
 
-        "RTableAss": {
+        "PubRoute1": {
             "Type" : "AWS::EC2::SubnetRouteTableAssociation",
             "Properties" : {
-              "RouteTableId" : {"Ref": "RouteTable1"},
+              "RouteTableId" : {"Ref": "PubRoute"},
               "SubnetId" :  {"Ref" : "PubSubnet1"}
+           }
+        },
+
+        "PubRoute2": {
+            "Type" : "AWS::EC2::SubnetRouteTableAssociation",
+            "Properties" : {
+              "RouteTableId" : {"Ref": "PubRoute"},
+              "SubnetId" :  {"Ref" : "PubSubnet2"}
            }
         },
 
@@ -118,6 +121,7 @@
               "Domain": "vpc"
             }
           },
+
           "NATGateway2": {
             "DependsOn": "IGWAttachment",
             "Type": "AWS::EC2::NatGateway",
@@ -140,6 +144,58 @@
             }
           },
 
+
+
+          "PrivRoute1": {
+            "Type": "AWS::EC2::RouteTable",
+            "Properties": {
+                "VpcId": {"Ref": "TestVPC"}
+            }
+        },
+
+        "RTAPriv1": {
+            "Type" : "AWS::EC2::SubnetRouteTableAssociation",
+            "Properties" : {
+              "RouteTableId" : {"Ref": "PrivRoute1"},
+              "SubnetId" :  {"Ref" : "PrivSubnet1"}
+           }
+        },
+        "PrivRoute2": {
+            "Type": "AWS::EC2::RouteTable",
+            "Properties": {
+                "VpcId": {"Ref": "TestVPC"}
+            }
+        },
+
+        "RTAPriv2": {
+            "Type" : "AWS::EC2::SubnetRouteTableAssociation",
+            "Properties" : {
+              "RouteTableId" : {"Ref": "PrivRoute2"},
+              "SubnetId" :  {"Ref" : "PrivSubnet2"}
+           }
+        },
+
+
+        
+        "PrivateDefaultRoute1": {
+            "DependsOn": "NATGateway1",
+            "Type": "AWS::EC2::Route",
+            "Properties": {
+                "RouteTableId": {"Ref": "PrivRoute1"},
+                "NatGatewayId": {"Ref": "NATGateway1"},
+                "DestinationCidrBlock": "0.0.0.0/0"
+            }
+        },
+
+        "PrivateDefaultRoute2": {
+            "DependsOn": "NATGateway2",
+            "Type": "AWS::EC2::Route",
+            "Properties": {
+                "RouteTableId": {"Ref": "PrivRoute2"},
+                "NatGatewayId": {"Ref": "NATGateway2"},
+                "DestinationCidrBlock": "0.0.0.0/0"
+            }
+        },
 
 
 
@@ -206,6 +262,22 @@
             }
         },
 
+        "AclAssoc3": {
+            "Type" : "AWS::EC2::SubnetNetworkAclAssociation",
+            "Properties" : {
+               "SubnetId" : {"Ref": "PrivSubnet1"},
+               "NetworkAclId" : {"Ref": "NetAcl1"} 
+            }
+        },
+        "AclAssoc4": {
+            "Type" : "AWS::EC2::SubnetNetworkAclAssociation",
+            "Properties" : {
+               "SubnetId" : {"Ref": "PrivSubnet2"},
+               "NetworkAclId" : {"Ref": "NetAcl1"} 
+            }
+        },
+
+        
 
         "SecGroup": {
           "Type" : "AWS::EC2::SecurityGroup",

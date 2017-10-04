@@ -63,6 +63,8 @@
           "TimeoutInMinutes" : "15",
           "Parameters": {
             "VpcId": {"Fn::GetAtt":["VPC","Outputs.VpcId"]},
+            "PubSubnet1Id": {"Fn::GetAtt":["VPC","Outputs.PubSubnet1Id"]},
+            "PubSubnet2Id": {"Fn::GetAtt":["VPC","Outputs.PubSubnet2Id"]},
             "PrivSubnet1Id": {"Fn::GetAtt":["VPC","Outputs.PrivSubnet1Id"]},
             "PrivSubnet2Id": {"Fn::GetAtt":["VPC","Outputs.PrivSubnet2Id"]},
             "SecurityGroup": {"Fn::GetAtt":["VPC","Outputs.SecurityGroupId"]},

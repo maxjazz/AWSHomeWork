@@ -5,6 +5,19 @@
         "Type": "String",
         "Description": "ID of VPC"
       },
+      
+      "PubSubnet1Id": {
+        "Type": "String",
+        "Description": "ID of Subnet"
+      },
+      
+      "PubSubnet2Id": {
+        "Type": "String",
+        "Description": "ID of Subnet"
+      },
+      
+      
+
 
       "PrivSubnet1Id": {
         "Type": "String",
@@ -134,8 +147,8 @@
             "Scheme" : "",
             "SecurityGroups" : [{"Ref":"ELBSecurityGroup"}],
             "Subnets" : [
-              { "Ref":"PrivSubnet1Id" },
-              { "Ref":"PrivSubnet2Id" }
+              { "Ref":"PubSubnet1Id" },
+              { "Ref":"PubSubnet2Id" }
             ]
          }
       }   
