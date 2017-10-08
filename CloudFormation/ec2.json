@@ -67,6 +67,24 @@
 
     },
 
+    
+    "Mappings" : {
+      "AWSInstanceType2Arch" : {
+        "t1.micro"    : { "Arch" : "64" },
+        "m1.small"    : { "Arch" : "64" },
+        "m1.medium"   : { "Arch" : "64" },
+        "m1.large"    : { "Arch" : "64" }
+      },
+  
+      "AWSRegionArch2AMI" : {
+        "us-east-1"      : { "64" : "ami-0568456c" },
+        "us-west-2"      : { "64" : "ami-927613a2" },
+        "us-west-1"      : { "64" : "ami-c08dbc85" }
+      }
+    },
+
+
+
     "Resources": {
       
       "LaunchConfig": {
@@ -110,7 +128,8 @@
               }
             ],
             "VPCZoneIdentifier" : [
-              {"Ref" : "PrivSubnet1Id"}]
+              {"Ref" : "PrivSubnet1Id"},
+              {"Ref" : "PrivSubnet2Id"}]
          }
       }, 
 
