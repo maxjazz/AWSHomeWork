@@ -1,5 +1,5 @@
 - name: Install Nginx 
-  apt: name=nginx state=present
+  yum: name=nginx state=present
 
 - name: Create directory for virtualhost
   file: dest=/srv/{{ server_name }} state=directory

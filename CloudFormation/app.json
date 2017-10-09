@@ -16,7 +16,8 @@
       "SSHKey": {
         "Type": "String",
         "Description": "SSH key name",
-        "Default": "amazon"
+        "Default": "amazon",
+        "AllowedValues" : ["amazon", "homework"],
       },
 
       "S3BucketName": {
