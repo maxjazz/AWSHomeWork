@@ -16,9 +16,6 @@
         "Description": "ID of Subnet"
       },
       
-      
-
-
       "PrivSubnet1Id": {
         "Type": "String",
         "Description": "ID of Subnet"
@@ -60,6 +57,17 @@
         "Description": "Id of the instance profile to apply to EC2 instances"
       },
 
+      "Priv1AZ" : {
+        "Type": "String",
+        "Description": "AZ for Priv1"
+      },
+      
+      "Priv2AZ" : {
+        "Type": "String",
+        "Description": "AZ for Priv1"
+      },
+      
+
       "AZ": {
         "Type": "String",
         "Description": "AZ for EC2 instances"
@@ -67,33 +75,44 @@
 
     },
 
-    
+
     "Mappings" : {
-      "AWSInstanceType2Arch" : {
-        "t1.micro"    : { "Arch" : "64" },
-        "m1.small"    : { "Arch" : "64" },
-        "m1.medium"   : { "Arch" : "64" },
-        "m1.large"    : { "Arch" : "64" }
-      },
-  
       "AWSRegionArch2AMI" : {
-        "us-east-1"      : { "64" : "ami-0568456c" },
-        "us-west-2"      : { "64" : "ami-927613a2" },
-        "us-west-1"      : { "64" : "ami-c08dbc85" }
+        "us-east-1"      : { "64" : "ami-8c1be5f6" },
+        "us-east-2"      : { "64" : "ami-c5062ba0" },
+        "us-west-1"      : { "64" : "ami-02eada62" },
+        "us-west-2"      : { "64" : "ami-9fa343e7" }
       }
     },
 
 
 
     "Resources": {
-      
+
+      "BastionHost" : {
+        "Type" : "AWS::EC2::Instance",
+        "Properties" : {
+           "ImageId" : { "Ref" : "AmiId" },
+           "KeyName" : { "Ref" : "SSHKey" },
+           "InstanceType" : {"Ref":"InstanceType"},
+           "SubnetId" : {"Ref" : "PubSubnet1Id"},
+           "Tags": [
+            {
+                "Key": "Name",
+                "Value": "BastionHost"
+            }
+         ]
+        }
+     }, 
+     
+     
       "LaunchConfig": {
         "Type" : "AWS::AutoScaling::LaunchConfiguration",
         "Properties" : {
            "AssociatePublicIpAddress" : "True",
            "BlockDeviceMappings" : [],
            "IamInstanceProfile" : {"Ref":"InstanceProf"},
-           "ImageId" : {"Ref": "AmiId"},
+          "ImageId" : { "Ref" : "AmiId" },
            "InstanceMonitoring" : "False",
            "InstanceType" : {"Ref":"InstanceType"},
            "KeyName" : {"Ref":"SSHKey"},
@@ -101,8 +120,10 @@
            "UserData": {
              "Fn::Base64":{"Fn::Join":["",[
                "#!/bin/bash\n",
-               "yum -y install nginx\n",
-               "service nginx restart\n"
+               "yum update && yum upgrade\n",
+               "yum -y install nginx git\n",
+               "service nginx restart\n",
+               "pip install ansible"
              ]]}
            }
          }
@@ -111,7 +132,7 @@
       "ASGroup": {
          "Type" : "AWS::AutoScaling::AutoScalingGroup",
          "Properties" : {
-            "AvailabilityZones" : [{"Ref":"AZ"}],
+            "AvailabilityZones" : [{"Ref":"Priv1AZ"},{"Ref":"Priv2AZ"}],
             "Cooldown" : "600",
             "DesiredCapacity" : "2",
             "HealthCheckType" : "ELB",

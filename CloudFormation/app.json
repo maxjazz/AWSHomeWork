@@ -72,6 +72,8 @@
             "AmiId": {"Ref": "AmiId"},
             "SSHKey": {"Ref": "SSHKey"},
             "InstanceProf": {"Fn::GetAtt":["IAMStack","Outputs.InstanceProfile"]},
+            "Priv1AZ" : {"Fn::GetAtt":["VPC", "Outputs.Priv1AZ"]},
+            "Priv2AZ" : {"Fn::GetAtt":["VPC", "Outputs.Priv2AZ"]},
             "AZ": {"Fn::GetAtt":["VPC","Outputs.SubnetAZ"]},
             "ELBSecurityGroup": {"Fn::GetAtt":["VPC","Outputs.ELBSecurityGroupId"]}
 

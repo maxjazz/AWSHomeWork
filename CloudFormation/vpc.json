@@ -2,52 +2,82 @@
     "AWSTemplateFormatVersion": "2010-09-09",
     "Resources": {
         
-        "TestVPC": {
+        "HomeWorkVPC": {
             "Type": "AWS::EC2::VPC",
             "Properties": {
-                "CidrBlock": "10.12.0.0/16"
+                "CidrBlock": "10.12.0.0/16",
+                "Tags": [
+                    {
+                      "Key": "Name",
+                      "Value": "VPC for Homework"
+                    }
+                  ]
             }
         },
         
         "PrivSubnet1": {
             "Type": "AWS::EC2::Subnet",
-            "DependsOn": "TestVPC",
+            "DependsOn": "HomeWorkVPC",
             "Properties": {
-                "VpcId": {"Ref": "TestVPC"},
+                "VpcId": {"Ref": "HomeWorkVPC"},
                 "AvailabilityZone": {"Fn::Select":["0",{"Fn::GetAZs": {"Ref":"AWS::Region"}}]},
-                "CidrBlock": "10.12.0.0/24"
+                "CidrBlock": "10.12.0.0/24",
+                "Tags": [
+                    {
+                      "Key": "Name",
+                      "Value": "Private subnet #1"
+                    }
+                  ]
             }
         },
 
         "PrivSubnet2": {
             "Type": "AWS::EC2::Subnet",
-            "DependsOn": "TestVPC",
+            "DependsOn": "HomeWorkVPC",
             "Properties": {
-                "VpcId": {"Ref": "TestVPC"},
+                "VpcId": {"Ref": "HomeWorkVPC"},
                 "AvailabilityZone": {"Fn::Select":["1",{"Fn::GetAZs": {"Ref":"AWS::Region"}}]},
-                "CidrBlock": "10.12.2.0/24"
+                "CidrBlock": "10.12.2.0/24",
+                "Tags": [
+                    {
+                      "Key": "Name",
+                      "Value": "Private subnet #2"
+                    }
+                  ]
             }
         },
 
         "PubSubnet1": {
             "Type": "AWS::EC2::Subnet",
-            "DependsOn": "TestVPC",
+            "DependsOn": "HomeWorkVPC",
             "Properties": {
-                "VpcId": {"Ref": "TestVPC"},
+                "VpcId": {"Ref": "HomeWorkVPC"},
                 "AvailabilityZone": {"Fn::Select":["0",{"Fn::GetAZs": {"Ref":"AWS::Region"}}]},
                 "CidrBlock": "10.12.10.0/24",
-                "MapPublicIpOnLaunch": "True"
+                "MapPublicIpOnLaunch": "True",
+                "Tags": [
+                    {
+                      "Key": "Name",
+                      "Value": "Public subnet #2"
+                    }
+                  ]
             }
         },
 
         "PubSubnet2": {
             "Type": "AWS::EC2::Subnet",
-            "DependsOn": "TestVPC",
+            "DependsOn": "HomeWorkVPC",
             "Properties": {
-                "VpcId": {"Ref": "TestVPC"},
+                "VpcId": {"Ref": "HomeWorkVPC"},
                 "AvailabilityZone": {"Fn::Select":["1",{"Fn::GetAZs": {"Ref":"AWS::Region"}}]},
                 "CidrBlock": "10.12.12.0/24",
-                "MapPublicIpOnLaunch": "True"
+                "MapPublicIpOnLaunch": "True",
+                "Tags": [
+                    {
+                      "Key": "Name",
+                      "Value": "Public subnet #2"
+                    }
+                  ]
             }
         },
 
@@ -55,7 +85,7 @@
         "PubRoute": {
             "Type": "AWS::EC2::RouteTable",
             "Properties": {
-                "VpcId": {"Ref": "TestVPC"}
+                "VpcId": {"Ref": "HomeWorkVPC"}
             }
         },
         
@@ -95,7 +125,7 @@
             "Type": "AWS::EC2::VPCGatewayAttachment",
             "Properties":{
                 "InternetGatewayId": {"Ref": "IGW1"},
-                "VpcId": {"Ref": "TestVPC"}
+                "VpcId": {"Ref": "HomeWorkVPC"}
             }            
         },
 
@@ -149,7 +179,7 @@
           "PrivRoute1": {
             "Type": "AWS::EC2::RouteTable",
             "Properties": {
-                "VpcId": {"Ref": "TestVPC"}
+                "VpcId": {"Ref": "HomeWorkVPC"}
             }
         },
 
@@ -163,7 +193,7 @@
         "PrivRoute2": {
             "Type": "AWS::EC2::RouteTable",
             "Properties": {
-                "VpcId": {"Ref": "TestVPC"}
+                "VpcId": {"Ref": "HomeWorkVPC"}
             }
         },
 
@@ -211,14 +241,14 @@
            "Type" : "AWS::EC2::VPCDHCPOptionsAssociation",
            "Properties" : {
               "DhcpOptionsId" : {"Ref":"DHCPOptions1"},
-              "VpcId" : {"Ref": "TestVPC"}
+              "VpcId" : {"Ref": "HomeWorkVPC"}
            }
         },
 
         "NetAcl1": {
             "Type": "AWS::EC2::NetworkAcl",
             "Properties": {
-                "VpcId": {"Ref": "TestVPC"}
+                "VpcId": {"Ref": "HomeWorkVPC"}
             }
         },
 
@@ -298,7 +328,7 @@
                   "IpProtocol" : "tcp"
                 }
              ],
-             "VpcId" : {"Ref": "TestVPC"},
+             "VpcId" : {"Ref": "HomeWorkVPC"},
              "Tags": [
                 {
                     "Key": "Name",
@@ -321,7 +351,7 @@
                   "IpProtocol" : "tcp"
                 }
              ],
-             "VpcId" : {"Ref": "TestVPC"},
+             "VpcId" : {"Ref": "HomeWorkVPC"},
              "Tags": [
                 {
                     "Key": "Name",
@@ -334,7 +364,7 @@
 
     "Outputs": {
         "VpcId": {
-            "Value": {"Ref": "TestVPC"}
+            "Value": {"Ref": "HomeWorkVPC"}
         },
 
         "PrivSubnet1Id": {
@@ -363,6 +393,14 @@
 
         "ELBSecurityGroupId": {
             "Value": {"Ref": "ELBSecGroup"}
+        },
+
+        "Priv1AZ" : {
+            "Value": {"Fn::GetAtt":["PrivSubnet1", "AvailabilityZone"]}
+        },
+
+        "Priv2AZ" : {
+            "Value": {"Fn::GetAtt":["PrivSubnet2", "AvailabilityZone"]}
         },
 
         "SubnetAZ": {
