@@ -109,10 +109,9 @@
       "LaunchConfig": {
         "Type" : "AWS::AutoScaling::LaunchConfiguration",
         "Properties" : {
-           "AssociatePublicIpAddress" : "True",
            "BlockDeviceMappings" : [],
            "IamInstanceProfile" : {"Ref":"InstanceProf"},
-          "ImageId" : { "Ref" : "AmiId" },
+           "ImageId" : { "Ref" : "AmiId" },
            "InstanceMonitoring" : "False",
            "InstanceType" : {"Ref":"InstanceType"},
            "KeyName" : {"Ref":"SSHKey"},
@@ -132,7 +131,7 @@
       "ASGroup": {
          "Type" : "AWS::AutoScaling::AutoScalingGroup",
          "Properties" : {
-            "AvailabilityZones" : [{"Ref":"Priv1AZ"},{"Ref":"Priv2AZ"}],
+            "AvailabilityZones" : [{"Fn::GetAZs" : "PrivSubnetId"},{"Fn::GetAZs":"PrivSubnetId"}],
             "Cooldown" : "600",
             "DesiredCapacity" : "2",
             "HealthCheckType" : "ELB",

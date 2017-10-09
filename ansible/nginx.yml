@@ -1,0 +1,4 @@
+- name: Install nginx on different VM's
+  hosts: all
+  roles:
+    - nginx
