@@ -3,6 +3,3 @@
 
 - name: Copy config
   template: src=www.conf dest=/etc/php-fpm.d/www.conf
-
-- name: Start phpfpm
-  service: name=php-fpm state=started

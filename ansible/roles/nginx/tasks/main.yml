@@ -1,15 +1,9 @@
 - name: Install Nginx
   yum: name=nginx state=present
 
-- name: Install php-fpm
-  yum: name=php-fpm state=present
-
-- name: Copy config
-  template: src=www.conf dest=/etc/php-fpm.d/www.conf
 
 - name: Start phpfpm
   service: name=php-fpm state=started
-
 
 - name: Create directory for virtualhost
   file: dest=/srv/html state=directory

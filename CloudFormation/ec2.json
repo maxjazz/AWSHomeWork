@@ -121,9 +121,9 @@
                "#!/bin/bash\n",
                "yum update && yum upgrade\n",
                "yum install git -y\n",
-               "pip install ansible\n",
                "git clone https://github.com/maxjazz/AWSHomeWork.git /home/ec2-user/configs\n",
-               "sudo /usr/local/bin/ansible-playbook -v /home/ec2-user/configs/ansible/nginx.yml --connection=local"
+               "bash /home/ec2-user/configs/scripts/start.sh\n",
+               "rm -f /home/ec2-user/configs"
              ]]}
            }
          }
