@@ -1,12 +1,25 @@
-- name: Install Nginx 
+- name: Install Nginx
   yum: name=nginx state=present
 
+- name: Install php-fpm
+  yum: name=php-fpm state=present
+
+- name: Copy config
+  template: src=www.conf dest=/etc/php-fpm.d/www.conf
+
+- name: Start phpfpm
+  service: name=php-fpm state=started
+
+
 - name: Create directory for virtualhost
-  file: dest=/srv/{{ server_name }} state=directory
+  file: dest=/srv/html state=directory
 
-- name: Copy virtualhost config
-  template: src=default.conf dest=/etc/nginx/conf.d/{{ server_name }}.conf
+- name: Copy nginx config
+  template: src=nginx.conf dest=/etc/nginx/nginx.conf
 
-- name: Copy index.html
-  template: src=index.html dest=/srv/{{ server_name}}/index.html
-  notify: restart nginx
+- name: Copy index.php
+  template: src=index.php dest=/srv/html/index.php
+
+- name: Restart nginx
+  service: name=nginx state=restarted
+  
