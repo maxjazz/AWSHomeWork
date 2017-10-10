@@ -1,4 +1,5 @@
-- name: Install nginx on different VM's
-  hosts: all
+- name: Install web-application for instance
+  hosts: localhost
   roles:
+    - php-fpm
     - nginx
