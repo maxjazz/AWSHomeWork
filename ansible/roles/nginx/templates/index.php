@@ -82,9 +82,9 @@ class SystemInfo
                 if ($line != "Name=$path") {
                     continue;
                 }
-                $result['free'] = explode('=', $lines[$index - 1])[1];
-                $result['size'] = explode('=', $lines[$index + 1])[1];
-                $result['used'] = $result['size'] - $result['free'];
+                //$result['free'] = explode('=', $lines[$index - 1])[1];
+                //$result['size'] = explode('=', $lines[$index + 1])[1];
+                //$result['used'] = $result['size'] - $result['free'];
                 break;
             }
         } else {
@@ -187,12 +187,22 @@ class SystemInfo
 }
 
 $system = new SystemInfo();
-echo "CPU usage: " . $system->getCpuLoadPercentage() . "%\n";
-echo "Disc: \n";
-print_r($system->getDiskSize(PHP_OS == 'WINNT' ? 'C:' : '/'));
-echo "\n\n";
-echo "RAM total: " . round($system->getRamTotal() / 1024 / 1024) . " MB \n";
-echo "RAM free: " . round($system->getRamFree() / 1024 / 1024) . " MB \n";
 
+echo "<html>\n";
+echo "<head><title>AWS Course Homewrok part 2</title></head>\n";
+echo "<body>";
+echo "<b>Hostname:</b> " . gethostname() . "</br>";
+echo "<b>CPU usage:</b> " . $system->getCpuLoadPercentage() . "%</br></br>";
+echo "<b>Disc: </br>";
+$disk = $system->getDiskSize();
+echo "     free " .round ( $disk['free'] / 1024 / 1024). " MB </br>";
+echo "     used " .round ( $disk['free'] / 1024 / 1024). " MB </br>";
+echo "    total " .round ( $disk['size'] / 1024 / 1024). " MB </br>";
+echo "</br></br>";
+echo "<b>RAM total:</b> " . round($system->getRamTotal() / 1024 / 1024) . " MB </br>";
+echo "<b>RAM free: </b>" . round($system->getRamFree() / 1024 / 1024) . " MB </br>";
+print_r ( ini_get());
 echo "<img src=\"images-homework/mib.jpg\"></img>";
+echo "</body></html>";§
 ?>
+
