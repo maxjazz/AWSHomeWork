@@ -11,7 +11,7 @@
         "Type": "String",
         "Description": "Name of AMI",
         "Default": "amznlinux",
-        "AllowedValues" : ["amazonlinux", "redhatlinux"]
+        "AllowedValues" : ["amznlinux", "redhatlinux"]
       },
 
       "Password" : {
@@ -104,7 +104,7 @@
       },
    
       "IAMUserName" : {
-        "Value": {"Fn::GetAtt":["IAMStack", "Outputs.Username"]}
+        "Value": {"Fn::GetAtt":["IAMStack", "Outputs.User"]}
       },
 
       "IAMPassword" : {

@@ -69,6 +69,7 @@
         "Type" : "AWS::IAM::User",
         "Properties" : {
           "Path" : "/",
+          "UserName" : "HomeWork-Checker",
           "LoginProfile" : {
             "Password" : { "Ref" : "Password" },
             "PasswordResetRequired" : "True"
@@ -212,6 +213,10 @@
 
         "User" : {
           "Value" : { "Ref" : "User" }
+        },
+
+        "Password" : {
+          "Value" : {"Ref" : "Password" }
         },
     
         "ConsoleAccess" : {

@@ -232,13 +232,7 @@
             "Properties": {
                 "RouteTableId": {"Ref": "PrivRoute1"},
                 "NatGatewayId": {"Ref": "NATGateway1"},
-                "DestinationCidrBlock": "0.0.0.0/0",
-                "Tags": [
-                    {
-                      "Key": "Name",
-                      "Value": "Default Route for Private Network #1"
-                    }
-                  ]
+                "DestinationCidrBlock": "0.0.0.0/0"
             }
         },
 
@@ -248,13 +242,7 @@
             "Properties": {
                 "RouteTableId": {"Ref": "PrivRoute2"},
                 "NatGatewayId": {"Ref": "NATGateway2"},
-                "DestinationCidrBlock": "0.0.0.0/0",
-                "Tags": [
-                    {
-                      "Key": "Name",
-                      "Value": "Default Route for Private Network #1"
-                    }
-                  ]
+                "DestinationCidrBlock": "0.0.0.0/0"
             }
         },
 
@@ -347,15 +335,22 @@
              "GroupDescription" : "Test VPC Sec group",
              "SecurityGroupIngress" : [
                 {
-                  "CidrIp" : "0.0.0.0/0",
-                  "FromPort" : "22",
-                  "ToPort" : "22",
-                  "IpProtocol" : "tcp"
-                },
+                    "CidrIp" : "0.0.0.0/0",
+                    "FromPort" : "22",
+                    "ToPort" : "22",
+                    "IpProtocol" : "tcp"
+                  },
+                  {
+                    "CidrIp" : "0.0.0.0/0",
+                    "FromPort" : "8080",
+                    "ToPort" : "8080",
+                    "IpProtocol" : "tcp"
+                  },
+                
                 {
                   "SourceSecurityGroupId": {"Ref":"ELBSecGroup"},
                   "FromPort" : "80",
-                  "ToPort" : "80",
+                  "ToPort" : "8080",
                   "IpProtocol" : "tcp"
                 }
              ],

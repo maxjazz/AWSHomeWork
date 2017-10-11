@@ -78,10 +78,10 @@
 
     "Mappings" : {
       "RegionMap" : {
-        "us-east-1"      : [{ "amznlinux" : "ami-8c1be5f6"}, {"redhatlinux" : "ami-c998b6b2"}],
-        "us-east-2"      : [{ "amznlinux" : "ami-c5062ba0"}, {"redhatlinux" : "ami-cfdafaaa"}],
-        "us-west-1"      : [{ "amznlinux" : "ami-02eada62"}, {"redhatlinux" : "ami-66eec506"}],
-        "us-west-2"      : [{ "amznlinux" : "ami-9fa343e7"}, {"redhatlinux" : "ami-9fa343e7"}]
+        "us-east-1"      : { "amznlinux" : "ami-8c1be5f6", "redhatlinux" : "ami-c998b6b2"},
+        "us-east-2"      : { "amznlinux" : "ami-c5062ba0", "redhatlinux" : "ami-cfdafaaa"},
+        "us-west-1"      : { "amznlinux" : "ami-02eada62", "redhatlinux" : "ami-66eec506"},
+        "us-west-2"      : { "amznlinux" : "ami-9fa343e7", "redhatlinux" : "ami-9fa343e7"}
       }
     },
 
@@ -92,9 +92,10 @@
       "BastionHost" : {
         "Type" : "AWS::EC2::Instance",
         "Properties" : {
-           "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "amazon" ] },
+           "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, {"Ref" : "Ami"} ] },
            "KeyName" : { "Ref" : "SSHKey" },
            "InstanceType" : {"Ref":"InstanceType"},
+           "SecurityGroups" : [{"Ref":"SecurityGroup"}],
            "SubnetId" : {"Ref" : "PubSubnet1Id"},
            "Tags": [
             {
@@ -170,11 +171,11 @@
             },
             "CrossZone" : "False",
             "HealthCheck" : {
-               "HealthyThreshold" : "1",
+               "HealthyThreshold" : "2",
                "Interval" : "100",
                "Target" : "HTTP:8080/",
                "Timeout" : "50",
-               "UnhealthyThreshold" : "100"
+               "UnhealthyThreshold" : "10"
             },            
             "LoadBalancerName" : "Application-ELB",
             "Listeners" : [
