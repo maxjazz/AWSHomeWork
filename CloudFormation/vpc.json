@@ -9,7 +9,7 @@
                 "Tags": [
                     {
                       "Key": "Name",
-                      "Value": "VPC for Homework"
+                      "Value": "VPC for HW"
                     }
                   ]
             }
@@ -142,7 +142,13 @@
               },
               "SubnetId": {
                 "Ref": "PubSubnet1"
-              }
+              },
+              "Tags": [
+                {
+                  "Key": "Name",
+                  "Value": "Nat Gateway #1"
+                }
+              ]
             }
           },
           "ElasticIP1": {
@@ -164,7 +170,13 @@
               },
               "SubnetId": {
                 "Ref": "PubSubnet2"
-              }
+              },
+              "Tags": [
+                {
+                  "Key": "Name",
+                  "Value": "Nat Gateway #2"
+                }
+              ]
             }
           },
           "ElasticIP2": {
@@ -179,7 +191,14 @@
           "PrivRoute1": {
             "Type": "AWS::EC2::RouteTable",
             "Properties": {
-                "VpcId": {"Ref": "HomeWorkVPC"}
+                "VpcId": {"Ref": "HomeWorkVPC"},
+                "Tags": [
+                    {
+                      "Key": "Name",
+                      "Value": "Route for private networks"
+                    }
+                  ]
+                 
             }
         },
 
@@ -213,7 +232,13 @@
             "Properties": {
                 "RouteTableId": {"Ref": "PrivRoute1"},
                 "NatGatewayId": {"Ref": "NATGateway1"},
-                "DestinationCidrBlock": "0.0.0.0/0"
+                "DestinationCidrBlock": "0.0.0.0/0",
+                "Tags": [
+                    {
+                      "Key": "Name",
+                      "Value": "Default Route for Private Network #1"
+                    }
+                  ]
             }
         },
 
@@ -223,7 +248,13 @@
             "Properties": {
                 "RouteTableId": {"Ref": "PrivRoute2"},
                 "NatGatewayId": {"Ref": "NATGateway2"},
-                "DestinationCidrBlock": "0.0.0.0/0"
+                "DestinationCidrBlock": "0.0.0.0/0",
+                "Tags": [
+                    {
+                      "Key": "Name",
+                      "Value": "Default Route for Private Network #1"
+                    }
+                  ]
             }
         },
 
@@ -347,7 +378,7 @@
                 {
                   "CidrIp" : "0.0.0.0/0",
                   "FromPort" : "80",
-                  "ToPort" : "80",
+                  "ToPort" : "8080",
                   "IpProtocol" : "tcp"
                 }
              ],

@@ -32,7 +32,7 @@
         "Default": "t2.micro"
       },
 
-      "AmiId": {
+      "Ami": {
         "Type": "String",
         "Description": "ID of AMI"
       },
@@ -78,10 +78,10 @@
 
     "Mappings" : {
       "RegionMap" : {
-        "us-east-1"      : { "amazon" : "ami-8c1be5f6"},
-        "us-east-2"      : { "amazon" : "ami-c5062ba0"},
-        "us-west-1"      : { "amazon" : "ami-02eada62"},
-        "us-west-2"      : { "amazon" : "ami-9fa343e7"}
+        "us-east-1"      : [{ "amznlinux" : "ami-8c1be5f6"}, {"redhatlinux" : "ami-c998b6b2"}],
+        "us-east-2"      : [{ "amznlinux" : "ami-c5062ba0"}, {"redhatlinux" : "ami-cfdafaaa"}],
+        "us-west-1"      : [{ "amznlinux" : "ami-02eada62"}, {"redhatlinux" : "ami-66eec506"}],
+        "us-west-2"      : [{ "amznlinux" : "ami-9fa343e7"}, {"redhatlinux" : "ami-9fa343e7"}]
       }
     },
 
@@ -111,7 +111,7 @@
         "Properties" : {
            "BlockDeviceMappings" : [],
            "IamInstanceProfile" : {"Ref":"InstanceProf"},
-           "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "amazon" ] },
+           "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, {"Ref" : "Ami" } ] },
            "InstanceMonitoring" : "False",
            "InstanceType" : {"Ref":"InstanceType"},
            "KeyName" : {"Ref":"SSHKey"},
@@ -121,6 +121,8 @@
                "#!/bin/bash\n",
                "yum update && yum upgrade\n",
                "yum install git -y\n",
+               "curl \"https://bootstrap.pypa.io/get-pip.py\" -o \"get-pip.py\"\n",
+               "python get-pip.py\n",
                "git clone https://github.com/maxjazz/AWSHomeWork.git /home/ec2-user/configs\n",
                "bash /home/ec2-user/configs/scripts/start.sh\n",
                "rm -f /home/ec2-user/configs"
@@ -168,16 +170,16 @@
             },
             "CrossZone" : "False",
             "HealthCheck" : {
-               "HealthyThreshold" : "5",
-               "Interval" : "10",
-               "Target" : "HTTP:80/",
-               "Timeout" : "5",
-               "UnhealthyThreshold" : "5"
+               "HealthyThreshold" : "1",
+               "Interval" : "100",
+               "Target" : "HTTP:8080/",
+               "Timeout" : "50",
+               "UnhealthyThreshold" : "100"
             },            
             "LoadBalancerName" : "Application-ELB",
             "Listeners" : [
               {
-                "InstancePort" : "80",
+                "InstancePort" : "8080",
                 "InstanceProtocol" : "HTTP",
                 "LoadBalancerPort" : "80",
                 "Protocol" : "HTTP"

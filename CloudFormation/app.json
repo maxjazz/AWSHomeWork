@@ -7,17 +7,25 @@
         "Default": "t2.micro"
       },
 
-      "AmiId": {
+      "Ami": {
         "Type": "String",
-        "Description": "ID of AMI",
-        "Default": "ami-4fffc834"
+        "Description": "Name of AMI",
+        "Default": "amznlinux",
+        "AllowedValues" : ["amazonlinux", "redhatlinux"]
+      },
+
+      "Password" : {
+        "Type": "String",
+        "Description" : "Password for Read-Only IAM role",
+        "Default": "Pass2Epam4Read"
+
       },
 
       "SSHKey": {
         "Type": "String",
         "Description": "SSH key name",
         "Default": "amazon",
-        "AllowedValues" : ["amazon", "homework"],
+        "AllowedValues" : ["amazon", "homework"]
       },
 
       "S3BucketName": {
@@ -49,7 +57,8 @@
           "TemplateURL": {"Fn::Sub":"https://s3.amazonaws.com/${S3BucketName}/iam.json"},
           "TimeoutInMinutes" : "15",
           "Parameters": {
-            "S3Bucket": {"Ref":"S3BucketName"}
+            "S3Bucket": {"Ref":"S3BucketName"},
+            "Password": {"Ref":"Password"}
           }
         }
       },
@@ -70,7 +79,7 @@
             "PrivSubnet2Id": {"Fn::GetAtt":["VPC","Outputs.PrivSubnet2Id"]},
             "SecurityGroup": {"Fn::GetAtt":["VPC","Outputs.SecurityGroupId"]},
             "InstanceType": {"Ref": "InstanceType"},
-            "AmiId": {"Ref": "AmiId"},
+            "Ami": {"Ref": "Ami"},
             "SSHKey": {"Ref": "SSHKey"},
             "InstanceProf": {"Fn::GetAtt":["IAMStack","Outputs.InstanceProfile"]},
             "Priv1AZ" : {"Fn::GetAtt":["VPC", "Outputs.Priv1AZ"]},
@@ -92,7 +101,14 @@
 
       "EC2ApplicationURL": {
         "Value": {"Fn::GetAtt":["EC2Application", "Outputs.SiteURL"]}
-      }
+      },
    
+      "IAMUserName" : {
+        "Value": {"Fn::GetAtt":["IAMStack", "Outputs.Username"]}
+      },
+
+      "IAMPassword" : {
+        "Value": {"Fn::GetAtt":["IAMStack", "Outputs.Password"]}
+      }
     }         
 }
