@@ -349,7 +349,7 @@
                 
                 {
                   "SourceSecurityGroupId": {"Ref":"ELBSecGroup"},
-                  "FromPort" : "80",
+                  "FromPort" : "8080",
                   "ToPort" : "8080",
                   "IpProtocol" : "tcp"
                 }

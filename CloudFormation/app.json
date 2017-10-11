@@ -7,6 +7,7 @@
         "Default": "t2.micro"
       },
 
+      
       "Ami": {
         "Type": "String",
         "Description": "Name of AMI",
@@ -39,6 +40,9 @@
 
       "VPC": {
         "Type" : "AWS::CloudFormation::Stack",
+        "Parameters" : {
+          "Region" : {"Ref":"Region"}
+        },
         "Properties" : {
           "Tags" : [
             {"Key":"StackType", "Value":"VPC"}
@@ -80,7 +84,7 @@
             "SecurityGroup": {"Fn::GetAtt":["VPC","Outputs.SecurityGroupId"]},
             "InstanceType": {"Ref": "InstanceType"},
             "Ami": {"Ref": "Ami"},
-            "SSHKey": {"Ref": "SSHKey"},
+            "SSHKey": {"Ref" : "SSHKey"},
             "InstanceProf": {"Fn::GetAtt":["IAMStack","Outputs.InstanceProfile"]},
             "Priv1AZ" : {"Fn::GetAtt":["VPC", "Outputs.Priv1AZ"]},
             "Priv2AZ" : {"Fn::GetAtt":["VPC", "Outputs.Priv2AZ"]},
@@ -109,6 +113,11 @@
 
       "IAMPassword" : {
         "Value": {"Fn::GetAtt":["IAMStack", "Outputs.Password"]}
+      },
+
+      "ConsoleAccess" : {
+        "Value" : { "Fn::Join" : [ "", [ "https://", 
+          { "Ref" : "AWS::AccountId" }, ".signin.aws.amazon.com/console" ] ] }
       }
     }         
 }

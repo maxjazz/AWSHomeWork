@@ -217,11 +217,6 @@
 
         "Password" : {
           "Value" : {"Ref" : "Password" }
-        },
-    
-        "ConsoleAccess" : {
-          "Value" : { "Fn::Join" : [ "", [ "https://", 
-            { "Ref" : "AWS::AccountId" }, ".signin.aws.amazon.com/console" ] ] }
         }
     }
 }

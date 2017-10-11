@@ -1,6 +1,11 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
     "Parameters": {
+      "Region": {
+        "Type": "String",
+        "Description": "Region"
+      },
+
       "VpcId": {
         "Type": "String",
         "Description": "ID of VPC"
