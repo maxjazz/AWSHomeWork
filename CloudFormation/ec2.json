@@ -1,11 +1,7 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
     "Parameters": {
-      "Region": {
-        "Type": "String",
-        "Description": "Region"
-      },
-
+     
       "VpcId": {
         "Type": "String",
         "Description": "ID of VPC"
@@ -70,14 +66,7 @@
       "Priv2AZ" : {
         "Type": "String",
         "Description": "AZ for Priv1"
-      },
-      
-
-      "AZ": {
-        "Type": "String",
-        "Description": "AZ for EC2 instances"
       }
-
     },
 
 
@@ -100,7 +89,6 @@
            "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, {"Ref" : "Ami"} ] },
            "KeyName" : { "Ref" : "SSHKey" },
            "InstanceType" : {"Ref":"InstanceType"},
-           "SecurityGroups" : [{"Ref":"SecurityGroup"}],
            "SubnetId" : {"Ref" : "PubSubnet1Id"},
            "Tags": [
             {

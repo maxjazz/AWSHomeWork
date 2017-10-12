@@ -1,5 +1,6 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
+  
     "Parameters": {      
       "InstanceType": {
         "Type": "String",
@@ -40,9 +41,6 @@
 
       "VPC": {
         "Type" : "AWS::CloudFormation::Stack",
-        "Parameters" : {
-          "Region" : {"Ref":"Region"}
-        },
         "Properties" : {
           "Tags" : [
             {"Key":"StackType", "Value":"VPC"}
@@ -88,7 +86,6 @@
             "InstanceProf": {"Fn::GetAtt":["IAMStack","Outputs.InstanceProfile"]},
             "Priv1AZ" : {"Fn::GetAtt":["VPC", "Outputs.Priv1AZ"]},
             "Priv2AZ" : {"Fn::GetAtt":["VPC", "Outputs.Priv2AZ"]},
-            "AZ": {"Fn::GetAtt":["VPC","Outputs.SubnetAZ"]},
             "ELBSecurityGroup": {"Fn::GetAtt":["VPC","Outputs.ELBSecurityGroupId"]}
 
           }

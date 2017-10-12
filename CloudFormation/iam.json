@@ -69,7 +69,7 @@
         "Type" : "AWS::IAM::User",
         "Properties" : {
           "Path" : "/",
-          "UserName" : "HomeWork-Checker",
+          "UserName" : "watcher",
           "LoginProfile" : {
             "Password" : { "Ref" : "Password" },
             "PasswordResetRequired" : "True"
